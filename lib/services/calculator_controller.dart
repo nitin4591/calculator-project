@@ -113,6 +113,11 @@ class CalculatorController extends ChangeNotifier {
       return;
     }
 
+    if (_replaceExpressionOnNextInput && previewResult != 'Error') {
+      expression = previewResult;
+      _replaceExpressionOnNextInput = false;
+    }
+
     _replaceExpressionOnNextInput = false;
 
     if (_endsWithUnaryMinus()) {
@@ -229,7 +234,6 @@ class CalculatorController extends ChangeNotifier {
         await _storageService.saveHistory(history);
       }
 
-      expression = result;
       previewResult = result;
       _replaceExpressionOnNextInput = true;
       notifyListeners();
