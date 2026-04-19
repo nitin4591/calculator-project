@@ -62,13 +62,9 @@ build/app/outputs/flutter-apk/
 
 ## Push To GitHub
 
-Create an empty GitHub repository, then run:
+This workspace already has a local Git repository and an initial commit. Create an empty GitHub repository, then run:
 
 ```bash
-git init
-git branch -M main
-git add .
-git commit -m "Initial modern calculator app"
 git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
 git push -u origin main
 ```
