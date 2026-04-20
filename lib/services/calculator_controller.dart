@@ -303,12 +303,16 @@ class CalculatorController extends ChangeNotifier {
   }
 
   void _persistSession() {
-    _storageService
-        .saveSession(
-          expression: expression,
-          previewResult: previewResult,
-        )
-        .ignore();
+    unawaited(
+      _storageService
+          .saveSession(
+            expression: expression,
+            previewResult: previewResult,
+          )
+          .catchError((Object error, StackTrace stackTrace) {
+            debugPrint('Failed to persist calculator session: $error');
+          }),
+    );
   }
 
   String _normalizedExpression(String input) {
