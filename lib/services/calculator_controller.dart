@@ -303,12 +303,12 @@ class CalculatorController extends ChangeNotifier {
   }
 
   void _persistSession() {
-    unawaited(
-      _storageService.saveSession(
-        expression: expression,
-        previewResult: previewResult,
-      ),
-    );
+    _storageService
+        .saveSession(
+          expression: expression,
+          previewResult: previewResult,
+        )
+        .ignore();
   }
 
   String _normalizedExpression(String input) {

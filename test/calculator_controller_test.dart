@@ -23,7 +23,6 @@ void main() {
       final controller = CalculatorController();
       await controller.initialize();
       controller.appendNumber('7');
-      await Future<void>.delayed(Duration.zero);
 
       final prefs = await SharedPreferences.getInstance();
       expect(prefs.getString('expression'), '7');
