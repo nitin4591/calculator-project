@@ -20,6 +20,7 @@ Modern Calculator is a Flutter-based calculator app designed to feel good on mob
 - `lib/services/storage_service.dart`: persistent storage for history and preferences
 - `lib/theme/app_theme.dart`: light and dark theme definitions
 - `.github/workflows/android-apk.yml`: CI workflow to build Android APKs on GitHub
+- `.github/workflows/flutter.yml`: APK release workflow with Java 17 + Flutter 3.22.0
 - `build_apk.bat`: one-command Windows helper for generating Android files and building APKs
 
 ## Local Setup

@@ -10,12 +10,16 @@ class AppPreferences {
     required this.scientificMode,
     required this.useDegrees,
     required this.history,
+    required this.expression,
+    required this.previewResult,
   });
 
   final ThemeMode themeMode;
   final bool scientificMode;
   final bool useDegrees;
   final List<HistoryEntry> history;
+  final String expression;
+  final String previewResult;
 }
 
 class StorageService {
@@ -23,6 +27,8 @@ class StorageService {
   static const _scientificModeKey = 'scientificMode';
   static const _useDegreesKey = 'useDegrees';
   static const _historyKey = 'history';
+  static const _expressionKey = 'expression';
+  static const _previewResultKey = 'previewResult';
 
   Future<AppPreferences> loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
@@ -46,6 +52,8 @@ class StorageService {
       scientificMode: prefs.getBool(_scientificModeKey) ?? false,
       useDegrees: prefs.getBool(_useDegreesKey) ?? true,
       history: history,
+      expression: prefs.getString(_expressionKey) ?? '',
+      previewResult: prefs.getString(_previewResultKey) ?? '0',
     );
   }
 
@@ -68,5 +76,14 @@ class StorageService {
     final prefs = await SharedPreferences.getInstance();
     final encoded = history.map((entry) => jsonEncode(entry.toJson())).toList();
     await prefs.setStringList(_historyKey, encoded);
+  }
+
+  Future<void> saveSession({
+    required String expression,
+    required String previewResult,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_expressionKey, expression);
+    await prefs.setString(_previewResultKey, previewResult);
   }
 }

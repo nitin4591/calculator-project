@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:modern_calculator/models/history_entry.dart';
 import 'package:modern_calculator/services/calculator_engine.dart';
@@ -26,7 +28,9 @@ class CalculatorController extends ChangeNotifier {
     scientificMode = preferences.scientificMode;
     useDegrees = preferences.useDegrees;
     history = preferences.history;
-    _refreshPreview(notify: false);
+    expression = preferences.expression;
+    previewResult = preferences.previewResult;
+    _refreshPreview(notify: false, persist: false);
     notifyListeners();
   }
 
@@ -52,6 +56,7 @@ class CalculatorController extends ChangeNotifier {
     expression = '';
     previewResult = '0';
     _replaceExpressionOnNextInput = false;
+    _persistSession();
     notifyListeners();
   }
 
@@ -236,10 +241,12 @@ class CalculatorController extends ChangeNotifier {
 
       previewResult = result;
       _replaceExpressionOnNextInput = true;
+      _persistSession();
       notifyListeners();
     } catch (_) {
       previewResult = 'Error';
       _replaceExpressionOnNextInput = true;
+      _persistSession();
       notifyListeners();
     }
   }
@@ -248,6 +255,7 @@ class CalculatorController extends ChangeNotifier {
     expression = entry.expression;
     previewResult = entry.result;
     _replaceExpressionOnNextInput = false;
+    _persistSession();
     notifyListeners();
   }
 
@@ -265,9 +273,12 @@ class CalculatorController extends ChangeNotifier {
     }
   }
 
-  void _refreshPreview({bool notify = true}) {
+  void _refreshPreview({bool notify = true, bool persist = true}) {
     if (expression.trim().isEmpty) {
       previewResult = '0';
+      if (persist) {
+        _persistSession();
+      }
       if (notify) {
         notifyListeners();
       }
@@ -282,9 +293,22 @@ class CalculatorController extends ChangeNotifier {
       previewResult = '...';
     }
 
+    if (persist) {
+      _persistSession();
+    }
+
     if (notify) {
       notifyListeners();
     }
+  }
+
+  void _persistSession() {
+    unawaited(
+      _storageService.saveSession(
+        expression: expression,
+        previewResult: previewResult,
+      ),
+    );
   }
 
   String _normalizedExpression(String input) {
